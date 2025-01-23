@@ -91,7 +91,7 @@ def IntroPage():
             {"style": right_section_style},
             html.img(
                 {
-                    "src": "https://media.licdn.com/dms/image/v2/C4D03AQEFayXPqVO5Ew/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1649922047754?e=1743033600&v=beta&t=n-zNwy16CGkqw6Z-iepbsj7iFhR2phU8bltI99VZbsU",
+                    "src": "",
                     "alt": "Intro Image",
                     "style": image_style,
                 }
