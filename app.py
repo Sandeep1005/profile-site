@@ -1,6 +1,6 @@
 from reactpy import component, html, run
 
-from testreactpy import IntroPage
+from intropage import IntroPage
 
 
 @component
