@@ -22,7 +22,7 @@ calculate_checksum() {
 # Function to start the Python subprocess
 start_python_service() {
     echo "Starting Python service..."
-    /home/sandeep/Projects/profile-site/venv/bin/python app.py &  # Replace 'main.py' with your entry point script
+    venv/bin/python app.py &  # Replace 'main.py' with your entry point script
     PYTHON_PID=$!
 }
 
