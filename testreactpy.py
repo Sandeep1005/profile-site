@@ -18,7 +18,7 @@ def IntroPage():
         "flexDirection": "column",  # Stack children vertically
         "justifyContent": "center",
         "alignItems": "center",
-        "backgroundColor": "#0D98BA",  # Light gray background for contrast
+        "backgroundColor": "#0D98BA",
         "borderRadius": "15px 0px 0px 15px",
         "position": "relative",  # Set position to relative for absolute positioning of child elements
     }
@@ -28,7 +28,7 @@ def IntroPage():
         "display": "flex",
         "justifyContent": "center",
         "alignItems": "center",
-        "backgroundColor": "#00CEC8",  # White background
+        "backgroundColor": "#00CEC8",
         "borderRadius": "0px 15px 15px 0px",
         "position": "relative",  # Set position to relative for absolute positioning of child elements
     }
