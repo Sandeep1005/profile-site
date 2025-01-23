@@ -1,31 +1,33 @@
 #!/bin/bash
 
-# Ensure a Python file is provided as an argument
+# Ensure a directory is provided as an argument
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 <python_file>"
+    echo "Usage: $0 <directory>"
     exit 1
 fi
 
-PYTHON_FILE=$1
+DIRECTORY=$1
 
-# Check if the provided file exists
-if [ ! -f "$PYTHON_FILE" ]; then
-    echo "Error: File '$PYTHON_FILE' does not exist."
+# Check if the provided directory exists
+if [ ! -d "$DIRECTORY" ]; then
+    echo "Error: Directory '$DIRECTORY' does not exist."
     exit 1
 fi
 
-# Store the initial checksum of the file
-INITIAL_CHECKSUM=$(md5sum "$PYTHON_FILE")
+# Function to calculate checksum for all .py files in the directory
+calculate_checksum() {
+    find "$DIRECTORY" -type f -name "*.py" -exec md5sum {} \; | sort | md5sum
+}
 
-# Function to start the Python file as a subprocess
-start_python_file() {
-    echo "Starting '$PYTHON_FILE'..."
-    /home/sandeep/Projects/profile-site/venv/bin/python "$PYTHON_FILE" &
+# Function to start the Python subprocess
+start_python_service() {
+    echo "Starting Python service..."
+    /home/sandeep/Projects/profile-site/venv/bin/python app.py &  # Replace 'main.py' with your entry point script
     PYTHON_PID=$!
 }
 
-# Function to stop the subprocess
-stop_python_file() {
+# Function to stop the Python subprocess
+stop_python_service() {
     if [ -n "$PYTHON_PID" ]; then
         echo "Stopping process (PID: $PYTHON_PID)..."
         kill "$PYTHON_PID"
@@ -33,27 +35,27 @@ stop_python_file() {
     fi
 }
 
-# Start the Python file initially
-start_python_file
+# Initial checksum
+INITIAL_CHECKSUM=$(calculate_checksum)
 
-echo "Monitoring '$PYTHON_FILE' for changes. Press [Ctrl+C] to stop."
+# Start the Python subprocess
+start_python_service
 
-# Monitor the file for changes
+echo "Monitoring '.py' files in '$DIRECTORY' for changes. Press [Ctrl+C] to stop."
+
+# Monitor for changes
 while true; do
-    # Calculate the current checksum
-    CURRENT_CHECKSUM=$(md5sum "$PYTHON_FILE")
+    CURRENT_CHECKSUM=$(calculate_checksum)
 
-    # Check if the checksum has changed
     if [ "$INITIAL_CHECKSUM" != "$CURRENT_CHECKSUM" ]; then
-        echo "Change detected in '$PYTHON_FILE'. Restarting..."
-        stop_python_file
-        start_python_file
+        echo "Change detected in '.py' files. Restarting..."
+        stop_python_service
+        start_python_service
         INITIAL_CHECKSUM=$CURRENT_CHECKSUM
     fi
 
-    # Wait for 1 second before checking again
     sleep 1
 done
 
-# Clean up subprocess on exit
-trap stop_python_file EXIT
+# Cleanup subprocess on script exit
+trap stop_python_service EXIT
