@@ -1,15 +1,17 @@
 from reactpy import component, html, run
 
-from intropage import IntroPage
+from components.intropage import IntroPage
+from components.mainpage import MainPage
 
 
 @component
-def MainComponent():
+def RootComponent():
     return html.div(
-        IntroPage()
+        IntroPage(),
+        MainPage()
     )
 
 
 if __name__ == '__main__':
-    run(MainComponent)
+    run(RootComponent)
     
