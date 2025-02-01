@@ -4,19 +4,54 @@ from reactpy import component, html, hooks
 @component
 def PopUpImage1():
     experienceItemImageStyle = {
-        "width": "80%",
+        "width": "100%",
         "border-radius": "10px",
         "cursor": "pointer",
         "transition": "transform 0.3s ease"
     }
-
-    popUpImageCaption = ""
 
     # State to handle popup visibility
     is_visible, set_visible = hooks.use_state(False)
     
     def toggle_popup(event):
         set_visible(not is_visible)
+
+    popupListStyle = {
+        "width": "100%",
+        "margin": "0px 5px 0px 5px",
+        "padding": "0px 0px 0px 0px",
+        "font-size": "18px",
+        "color": "black",
+        "font-family": "Arial, sans-serif",
+
+        "list-style-type": "none",
+        # "background-color": "#f8f9fa",
+        "border-radius": "8px",
+        # "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    }
+    listItemStyle = {
+        "padding": "10px 15px",
+        "border-bottom": "1px solid #fff",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    lastListItemStyle = {
+        "padding": "10px 15px",
+        # "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    markStyle = {
+        "background-color": "#0D98BA",
+        "color": "#fff",
+        "padding": "2px 4px",
+        "border-radius": "4px",
+        "font-weight": "bold"
+    }
 
     return html.div(
         {
@@ -76,17 +111,7 @@ def PopUpImage1():
                                 "borderRadius": "10px",
                             },
                         },
-                    ),
-                    html.p(
-                        {
-                            "style": {
-                                "textAlign": "center",
-                                "marginTop": "8px",
-                                "fontWeight": "bold",
-                            }
-                        },
-                        "This is the caption for the image.",
-                    ),
+                    )
                 ),
                 html.div(
                     {
@@ -98,10 +123,28 @@ def PopUpImage1():
                             "textAlign": "justify",
                         }
                     },
-                    html.p(
-                        "This is some descriptive text on the right side of the popup. "
-                        "You can write anything here to complement the image and its caption."
-                    ),
+                    html.ul(
+                        {"style": popupListStyle},
+                        html.li(
+                            {"style": listItemStyle},
+                            "Got the internship through Internshala"
+                        ),
+                        html.li(
+                            {"style": lastListItemStyle},
+                            "Can be verified with: ",
+                            html.mark({"style": markStyle},
+                                      html.a(
+                                          {
+                                              "style": {"text-decoration": "none",
+                                                        "color": "#fff"},
+                                              "target": "_blank",
+                                              "href": "https://internshala.com/student/certificate/87186093/FDC05493-E773-5511-0909-3EC76F81C503"
+                                          },
+                                          "Internshala"
+                                      ) 
+                                     )
+                        )
+                    )
                 ),
             ),
             html.button(
@@ -159,13 +202,41 @@ def ExperienceItem2():
         "justify-content": "flex-start",
         "align-items": "center"
     }
-    experienceItemParagraphStyle = {
+    experienceItemListStyle = {
         "width": "100%",
-        "margin": "0px 20px 20px 20px",
+        "margin": "0px 0px 20px 20px",
         "padding": "0px 80px 0px 80px",
         "font-size": "18px",
         "color": "black",
         "font-family": "Arial, sans-serif",
+
+        "list-style-type": "none",
+        # "background-color": "#f8f9fa",
+        "border-radius": "8px",
+        # "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    }
+    listItemStyle = {
+        "padding": "10px 15px",
+        "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    lastListItemStyle = {
+        "padding": "10px 15px",
+        # "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    markStyle = {
+        "background-color": "#0D98BA",
+        "color": "#fff",
+        "padding": "2px 4px",
+        "border-radius": "4px",
+        "font-weight": "bold"
     }
 
     imageHoverZoomJavaScript = """
@@ -202,12 +273,34 @@ def ExperienceItem2():
         html.div(
             {"style": experienceItemContentDivStyle},
             html.ul(
-                {"style": experienceItemParagraphStyle},
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
+                {"style": experienceItemListStyle},
+                html.li({"style": listItemStyle}, 
+                        "My task is to write ",
+                        html.mark(
+                            {"style": markStyle},
+                            "LaTeX"
+                        ),
+                        " generator using Python to make non-repetitive mathematics questions for school students"),
+                html.li({"style": listItemStyle}, 
+                        "Python code generates Latex code that has question, answer with diagrams (dynamiaclly generated)"),
+                html.li(
+                            {"style": lastListItemStyle}, 
+                            "Got expertise in using ",
+                            html.mark(
+                                {"style": markStyle},
+                                "Git"
+                            ),
+                            ", ",
+                            html.mark(
+                                {"style": markStyle},
+                                "GitHub"
+                            ),
+                            ", ",
+                            html.mark(
+                                {"style": markStyle},
+                                "OOP"
+                            ), " (Object Oriented Programming)"
+                        )
             ),
             PopUpImage1(),
         ),

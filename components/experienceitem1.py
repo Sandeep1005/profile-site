@@ -436,11 +436,11 @@ def ExperienceItem1():
                 html.li({"style": listItemStyle}, 
                         "Finetuning LLMs (",
                         html.mark({"style": markStyle}, "Llama"), 
-                        " 7B, 13B), building ",
+                        " 7B, 13B) using LoRA, QLoRA, building ",
                         html.mark({"style": markStyle}, "RAG"),
-                        " architecture for QA task"),
+                        " architecture for QA tasks"),
                 html.li({"style": listItemStyle}, 
-                        "Forecasting  indicators and traffic using deep learning: TiDE, SOFTS, etc."),
+                        "Forecasting financial indicators and traffic volume using deep learning: TiDE, SOFTS, etc."),
                 html.li({"style": listItemStyle}, 
                         "Stock trend prediction using Reinforcement Learning - DQN, DDPG, PPO"),
                 html.li({"style": listItemStyle}, 
@@ -449,14 +449,15 @@ def ExperienceItem1():
                         html.mark({"style": markStyle}, "DVC"), ", ", 
                         html.mark({"style": markStyle}, "Jenkins"), ", ",
                         html.mark({"style": markStyle}, "Docker"), " (private repo), ",
-                        html.mark({"style": markStyle}, "OCI GPUs")),
+                        html.mark({"style": markStyle}, "OCI GPUs"),
+                        " and local GPUs"),
                 html.li({"style": listItemStyle}, 
                         "Recognised by the company by Fast Track Career program"),
                 html.li({"style": lastListItemStyle}, 
                         "Won an internal hackathon in financial domain (ideation, plannning, MVP)"),
             ),
             PopUpImage1(),
-            PopUpImage2()
+            # PopUpImage2()
         
         ),
         html.script(imageHoverZoomJavaScript)
