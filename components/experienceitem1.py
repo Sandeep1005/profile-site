@@ -10,10 +10,45 @@ def PopUpImage1():
         "transition": "transform 0.3s ease"
     }
 
-    popUpImageCaption = ""
-
     # State to handle popup visibility
     is_visible, set_visible = hooks.use_state(False)
+
+    popupListStyle = {
+        "width": "100%",
+        "margin": "0px 5px 0px 5px",
+        "padding": "0px 0px 0px 0px",
+        "font-size": "18px",
+        "color": "black",
+        "font-family": "Arial, sans-serif",
+
+        "list-style-type": "none",
+        # "background-color": "#f8f9fa",
+        "border-radius": "8px",
+        # "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    }
+    listItemStyle = {
+        "padding": "10px 15px",
+        "border-bottom": "1px solid #fff",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    lastListItemStyle = {
+        "padding": "10px 15px",
+        # "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    markStyle = {
+        "background-color": "#0D98BA",
+        "color": "#fff",
+        "padding": "2px 4px",
+        "border-radius": "4px",
+        "font-weight": "bold"
+    }
     
     def toggle_popup(event):
         set_visible(not is_visible)
@@ -77,16 +112,16 @@ def PopUpImage1():
                             },
                         },
                     ),
-                    html.p(
-                        {
-                            "style": {
-                                "textAlign": "center",
-                                "marginTop": "8px",
-                                "fontWeight": "bold",
-                            }
-                        },
-                        "This is the caption for the image.",
-                    ),
+                    # html.p(
+                    #     {
+                    #         "style": {
+                    #             "textAlign": "center",
+                    #             "marginTop": "8px",
+                    #             "fontWeight": "bold",
+                    #         }
+                    #     },
+                    #     # "Certificate of recognition",
+                    # ),
                 ),
                 html.div(
                     {
@@ -98,10 +133,36 @@ def PopUpImage1():
                             "textAlign": "justify",
                         }
                     },
-                    html.p(
-                        "This is some descriptive text on the right side of the popup. "
-                        "You can write anything here to complement the image and its caption."
-                    ),
+                    # html.p(
+                    #     "This is some descriptive text on the right side of the popup. "
+                    #     "You can write anything here to complement the image and its caption."
+                    # ),
+                    html.ul(
+                        {"style": popupListStyle},
+                        html.li(
+                            {"style": listItemStyle},
+                            "This is the certificate of recognition for adding me to Fast Track Career program."
+                        ),
+                        html.li(
+                            {"style": listItemStyle},
+                            "It involves getting more responsibilities, and more growth opportunities"
+                        ),
+                        html.li(
+                            {"style": lastListItemStyle},
+                            "Can be verified with: ",
+                            html.mark({"style": markStyle},
+                                      html.a(
+                                          {
+                                              "style": {"text-decoration": "none",
+                                                        "color": "#fff"},
+                                              "target": "_blank",
+                                              "href": "https://www.linkedin.com/posts/bysandeep_i-want-to-thank-decimal-point-analytics-for-activity-7030878035490783233-EJXp?utm_source=share&utm_medium=member_desktop"
+                                          },
+                                          "LinkedIn post"
+                                      ) 
+                                     )
+                        )
+                    )
                 ),
             ),
             html.button(
@@ -300,13 +361,41 @@ def ExperienceItem1():
         "justify-content": "flex-start",
         "align-items": "center"
     }
-    experienceItemParagraphStyle = {
+    experienceItemListStyle = {
         "width": "100%",
-        "margin": "0px 20px 20px 20px",
+        "margin": "0px 0px 20px 20px",
         "padding": "0px 80px 0px 80px",
         "font-size": "18px",
         "color": "black",
         "font-family": "Arial, sans-serif",
+
+        "list-style-type": "none",
+        # "background-color": "#f8f9fa",
+        "border-radius": "8px",
+        # "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    }
+    listItemStyle = {
+        "padding": "10px 15px",
+        "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    lastListItemStyle = {
+        "padding": "10px 15px",
+        # "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    markStyle = {
+        "background-color": "#0D98BA",
+        "color": "#fff",
+        "padding": "2px 4px",
+        "border-radius": "4px",
+        "font-weight": "bold"
     }
 
     imageHoverZoomJavaScript = """
@@ -330,7 +419,7 @@ def ExperienceItem1():
         {"style": experienceItemstyle},
         html.h2(
             {"style": experienceItemHeaderStyle},
-            "Data Scientist - ",
+            "Senior Data Scientist - ",
             html.a({"href": "https://www.decimalpointanalytics.com/",
                     "target": "_blank",
                     "style": {
@@ -343,15 +432,32 @@ def ExperienceItem1():
         html.div(
             {"style": experienceItemContentDivStyle},
             html.ul(
-                {"style": experienceItemParagraphStyle},
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
-                html.li("some words about this experience some words about this experience"),
+                {"style": experienceItemListStyle},
+                html.li({"style": listItemStyle}, 
+                        "Finetuning LLMs (",
+                        html.mark({"style": markStyle}, "Llama"), 
+                        " 7B, 13B), building ",
+                        html.mark({"style": markStyle}, "RAG"),
+                        " architecture for QA task"),
+                html.li({"style": listItemStyle}, 
+                        "Forecasting  indicators and traffic using deep learning: TiDE, SOFTS, etc."),
+                html.li({"style": listItemStyle}, 
+                        "Stock trend prediction using Reinforcement Learning - DQN, DDPG, PPO"),
+                html.li({"style": listItemStyle}, 
+                        "MLOps infra: ", 
+                        html.mark({"style": markStyle}, "MLFlow"), ", ", 
+                        html.mark({"style": markStyle}, "DVC"), ", ", 
+                        html.mark({"style": markStyle}, "Jenkins"), ", ",
+                        html.mark({"style": markStyle}, "Docker"), " (private repo), ",
+                        html.mark({"style": markStyle}, "OCI GPUs")),
+                html.li({"style": listItemStyle}, 
+                        "Recognised by the company by Fast Track Career program"),
+                html.li({"style": lastListItemStyle}, 
+                        "Won an internal hackathon in financial domain (ideation, plannning, MVP)"),
             ),
             PopUpImage1(),
             PopUpImage2()
+        
         ),
         html.script(imageHoverZoomJavaScript)
     )
