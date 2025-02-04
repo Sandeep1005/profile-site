@@ -1,4 +1,4 @@
-from reactpy import component, html, hooks
+from reactpy import component, html, hooks, run
 
 
 @component
@@ -10,7 +10,44 @@ def PopUpImage1():
         "transition": "transform 0.3s ease"
     }
 
-    popUpImageCaption = ""
+    popupListStyle = {
+        "width": "100%",
+        "margin": "0px 5px 0px 5px",
+        "padding": "0px 0px 0px 0px",
+        "font-size": "18px",
+        "color": "black",
+        "font-family": "Arial, sans-serif",
+
+        "list-style-type": "none",
+        # "background-color": "#f8f9fa",
+        "border-radius": "8px",
+        # "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    }
+    listItemStyle = {
+        "padding": "10px 15px",
+        "border-bottom": "1px solid #fff",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s",
+        "text-align": "center"
+    }
+    lastListItemStyle = {
+        "padding": "10px 15px",
+        # "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s",
+        "text-align": "center"
+    }
+    markStyle = {
+        "background-color": "#0D98BA",
+        "color": "#fff",
+        "padding": "2px 4px",
+        "border-radius": "4px",
+        "font-weight": "bold"
+    }
 
     # State to handle popup visibility
     is_visible, set_visible = hooks.use_state(False)
@@ -32,7 +69,7 @@ def PopUpImage1():
                     "style": educationItemImageStyle,
                     "class_name": "zoom-image-edu1",
                     "alt": "Image",
-                    "src": "https://media.licdn.com/dms/image/v2/C4D22AQHZmRYvg4064Q/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1676291949097?e=2147483647&v=beta&t=d6fu7g0sNf0DYQjymgW0039TChTXoUY8G44WItF7yTk",
+                    "src": "/static/images/paperImage.png",
                     "onClick": toggle_popup,
             },
         ),
@@ -57,7 +94,7 @@ def PopUpImage1():
                 {
                     "style": {
                         "display": "flex",
-                        "flexDirection": "row",
+                        "flexDirection": "column",
                         "gap": "16px",
                     },
                 },
@@ -67,25 +104,13 @@ def PopUpImage1():
                             "flex": "1",
                         },
                     },
-                    html.img(
-                        {
-                            "src": "https://media.licdn.com/dms/image/v2/C4D22AQHZmRYvg4064Q/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1676291949097?e=2147483647&v=beta&t=d6fu7g0sNf0DYQjymgW0039TChTXoUY8G44WItF7yTk",
-                            "alt": "Popup Image",
-                            "style": {
-                                "width": "100%",
-                                "borderRadius": "10px",
-                            },
-                        },
-                    ),
-                    html.p(
-                        {
-                            "style": {
-                                "textAlign": "center",
-                                "marginTop": "8px",
-                                "fontWeight": "bold",
-                            }
-                        },
-                        "This is the caption for the image.",
+                    html.iframe(
+                        {"src": "/static/pdfs/TIM_paper.pdf",
+                        "style": {
+                            "width": "100%",
+                            "height": "100%",
+                            "borderRadius": "10px",
+                        }}
                     ),
                 ),
                 html.div(
@@ -98,10 +123,23 @@ def PopUpImage1():
                             "textAlign": "justify",
                         }
                     },
-                    html.p(
-                        "This is some descriptive text on the right side of the popup. "
-                        "You can write anything here to complement the image and its caption."
-                    ),
+                    html.ul(
+                        {"style": popupListStyle},
+                        html.li(
+                            {"style": lastListItemStyle},
+                            "IEEE TIM: (Impact Factor 5.6), DOI: ",
+                            html.mark({"style": markStyle},
+                                      html.a(
+                                          {
+                                              "style": {"text-decoration": "none",
+                                                        "color": "#fff"},
+                                              "target": "_blank",
+                                              "href": "https://ieeexplore.ieee.org/document/10616098"
+                                          },
+                                          "10.1109/TIM.2024.3436119"
+                                      )),
+                        )
+                    )
                 ),
             ),
             html.button(
@@ -139,7 +177,116 @@ def PopUpImage1():
                 "onClick": toggle_popup,
             },
         ),
-    )    
+    )
+
+
+@component
+def PopUpDemoDigitRecognizer():
+    demoImageStyle = {
+        "width": "80%",
+        "border-radius": "10px",
+        "cursor": "pointer",
+        "transition": "transform 0.3s ease"
+    }
+    return html.div(
+        html.img(
+            {"style": demoImageStyle,
+             "src": "https://media.licdn.com/dms/image/v2/C4D22AQHZmRYvg4064Q/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1676291949097?e=2147483647&v=beta&t=d6fu7g0sNf0DYQjymgW0039TChTXoUY8G44WItF7yTk",
+             "alt": "Click to scribble",
+             "onclick": "openPopup()"}
+        ),
+        html.div(
+            {"class_name": "overlay",
+             "id": "overlay",
+             "onclick": "closePopup()",
+             "style": {
+                 "display": "none",
+            "position": "fixed",
+            "top": "0",
+            "left": "0",
+            "width": "100%",
+            "height": "100%",
+            "background": "rgba(0, 0, 0, 0.5)",
+            "z-index": "999",
+             }}
+        ),
+        html.div(
+            {"class_name": "popup",
+             "id": "popup",
+             "style": {
+                 "display": "none",
+                "position": "fixed",
+                "top": "50%",
+                "left": "50%",
+                "transform": "translate(-50%, -50%)",
+                "background": "white",
+                "border": "2px solid black",
+                "padding": "20px",
+                "box-shadow": "0 0 10px rgba(0, 0, 0, 0.5)",
+                "z-index": "1000",
+             }},
+             html.canvas(
+                 {"id": "scribblePad",
+                  "width": "200px",
+                  "height": "200px",
+                  "style": {
+                      "border": "1px solid black",
+                    "cursor": "crosshair",
+                  }}
+             ),
+             html.br(),
+             html.button(
+                 {"onclick": "clearCanvas()"},
+                 "clear"
+             ),
+             html.button(
+                 {"onclick": "closePopup()"},
+                 "Close"
+             )
+        ),
+        html.script(
+            """
+            let canvas = document.getElementById("scribblePad");
+            let ctx = canvas.getContext("2d");
+            let drawing = false;
+            
+            canvas.addEventListener("mousedown", (event) => {
+                drawing = true;
+                ctx.beginPath(); // Start a new path on mouse down
+                ctx.moveTo(event.offsetX, event.offsetY);
+            });
+            
+            canvas.addEventListener("mouseup", () => drawing = false);
+            canvas.addEventListener("mousemove", draw);
+            
+            function draw(event) {
+                if (!drawing) return;
+                ctx.lineWidth = 3;
+                ctx.lineCap = "round";
+                ctx.strokeStyle = "black";
+                ctx.lineTo(event.offsetX, event.offsetY);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(event.offsetX, event.offsetY);
+            }
+            
+            function clearCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath(); // Reset path to prevent line continuation
+            }
+            
+            function openPopup() {
+                document.getElementById("popup").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+            }
+            
+            function closePopup() {
+                document.getElementById("popup").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+            }
+"""
+        )
+    )
 
 
 @component
@@ -300,13 +447,41 @@ def EducationItem1():
         "justify-content": "space-between",
         "align-items": "center"
     }
-    educationItemParagraphStyle = {
+    educationItemListStyle = {
         "width": "100%",
-        "margin": "0px 20px 20px 20px",
+        "margin": "0px 0px 20px 20px",
         "padding": "0px 80px 0px 80px",
         "font-size": "18px",
         "color": "black",
         "font-family": "Arial, sans-serif",
+
+        "list-style-type": "none",
+        # "background-color": "#f8f9fa",
+        "border-radius": "8px",
+        # "box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    }
+    listItemStyle = {
+        "padding": "10px 15px",
+        "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    lastListItemStyle = {
+        "padding": "10px 15px",
+        # "border-bottom": "1px solid #ddd",
+        "font-size": "16px",
+        "color": "#333",
+        # "cursor": "pointer",
+        "transition": "background-color 0.3s"
+    }
+    markStyle = {
+        "background-color": "#0D98BA",
+        "color": "#fff",
+        "padding": "2px 4px",
+        "border-radius": "4px",
+        "font-weight": "bold"
     }
 
     imageHoverZoomJavaScript = """
@@ -343,15 +518,26 @@ def EducationItem1():
         html.div(
             {"style": educationItemContentDivStyle},
             html.ul(
-                {"style": educationItemParagraphStyle},
-                html.li("some words about this education some words about this education"),
-                html.li("some words about this education some words about this education"),
-                html.li("some words about this education some words about this education"),
-                html.li("some words about this education some words about this education"),
-                html.li("some words about this education some words about this education"),
+                {"style": educationItemListStyle},
+                html.li({"style": listItemStyle},
+                        "For my thesis, I designed and made the components of a cost-effective, portable, not-destructive method to measure prestress in beams."),
+                html.li({"style": listItemStyle},
+                        "DIC for displacement measurement with time -> FFT for natural frequency -> analytical relations for prestress"),
+                html.li({"style": listItemStyle},
+                        "Published this work in ",
+                        html.mark({"style": markStyle},
+                                  "IEEE TIM"),
+                        " (Transactions in Instrumentation and Measurement) journal"),
+                html.li({"style": lastListItemStyle},
+                        "Did a course on fundamentals of AI/ML. As a part of course work, built a digit recognizer from scratch including back-propagation"),
             ),
             PopUpImage1(),
             PopUpImage2()
+            # PopUpDemoDigitRecognizer()
         ),
         html.script(imageHoverZoomJavaScript)
     )
+
+
+if __name__ == "__main__":
+    run(PopUpDemoDigitRecognizer)

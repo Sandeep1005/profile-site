@@ -1,157 +1,79 @@
-from reactpy import component, html, hooks, run
+import reactpy as rp
+from reactpy import html
+from reactpy import hooks
 
 
-@component
-def ImagePopup():
-    # State to handle popup visibility and animation
-    is_visible, set_visible = hooks.use_state(False)
-    is_animating, set_animating = hooks.use_state(False)
-    
-    def open_popup(event):
-        set_visible(True)  # Show the popup
-        set_animating(True)  # Start the animation
-    
-    def close_popup(event):
-        set_animating(False)  # Start closing animation
-        
-        # Use a delayed effect to hide the popup after the animation ends
-        hooks.use_effect(lambda: hooks.delayed_effect(lambda: set_visible(False), 300))
-    
+def SignaturePad():
     return html.div(
-        {
-            "style": {
-                "position": "relative",
-                "fontFamily": "Arial, sans-serif",
-                "textAlign": "center",
-            }
-        },
-        # Thumbnail image
-        html.img(
-            {
-                "src": "https://via.placeholder.com/200",
-                "alt": "Thumbnail",
-                "style": {
-                    "cursor": "pointer",
-                    "borderRadius": "8px",
-                    "boxShadow": "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                },
-                "onClick": open_popup,
-            },
-        ),
-        # Popup container with animation
-        html.div(
-            {
-                "style": {
-                    "display": "block" if is_visible else "none",  # Control visibility
-                    "position": "fixed",
-                    "top": "50%",
-                    "left": "50%",
-                    "transform": "translate(-50%, -50%)"
-                    + (" scale(1)" if is_animating else " scale(0.9)"),
-                    "opacity": "1" if is_animating else "0",
-                    "transition": "opacity 0.3s ease, transform 0.3s ease",  # Smooth animations
-                    "width": "80%",
-                    "maxWidth": "600px",
-                    "backgroundColor": "#fff",
-                    "boxShadow": "0px 8px 16px rgba(0, 0, 0, 0.2)",
-                    "borderRadius": "8px",
-                    "zIndex": "1000",
-                    "padding": "16px",
-                },
-            },
+        {"class_name": "canvas-container"},
+        html.canvas(
+            {"class_name": "drawingCanvas",
+             "style": {
+                 "width": "500px",
+                 "height": "500px"
+             }},
             html.div(
-                {
-                    "style": {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "justifyContent": "flex-start",
-                        "gap": "16px",
-                    },
-                },
-                # Left side with image and caption
-                html.div(
-                    {
-                        "style": {"flex": "1"},
-                    },
-                    html.img(
-                        {
-                            "src": "https://via.placeholder.com/300",
-                            "alt": "Popup Image",
-                            "style": {
-                                "width": "100%",
-                                "borderRadius": "8px",
-                            },
-                        },
-                    ),
-                    html.p(
-                        {
-                            "style": {
-                                "textAlign": "center",
-                                "marginTop": "8px",
-                                "fontWeight": "bold",
-                            }
-                        },
-                        "This is the caption for the image.",
-                    ),
-                ),
-                # Right side with descriptive text
-                html.div(
-                    {
-                        "style": {
-                            "flex": "1",
-                            "display": "flex",
-                            "flexDirection": "column",
-                            "justifyContent": "flex-start",
-                            "textAlign": "justify",
-                        }
-                    },
-                    html.p(
-                        "This is some descriptive text on the right side of the popup. "
-                        "You can write anything here to complement the image and its caption."
-                    ),
-                ),
-            ),
-            # Close button
-            html.button(
-                {
-                    "style": {
-                        "position": "absolute",
-                        "top": "8px",
-                        "right": "8px",
-                        "backgroundColor": "red",
-                        "color": "#fff",
-                        "border": "none",
-                        "borderRadius": "50%",
-                        "width": "30px",
-                        "height": "30px",
-                        "cursor": "pointer",
-                        "fontWeight": "bold",
-                    },
-                    "onClick": close_popup,
-                },
-                "×",
-            ),
+                html.button(
+                    {"id": "clearBtn",
+                     "class_name": "clear-btn"}
+                )
+            )
         ),
-        # Backdrop with animation
-        html.div(
-            {
-                "style": {
-                    "display": "block" if is_visible else "none",  # Only show backdrop if visible
-                    "position": "fixed",
-                    "top": "0",
-                    "left": "0",
-                    "width": "100%",
-                    "height": "100%",
-                    "backgroundColor": "rgba(0, 0, 0, 0.5)",
-                    "opacity": "1" if is_animating else "0",
-                    "transition": "opacity 0.3s ease",
-                    "zIndex": "999",
-                },
-                "onClick": close_popup,  # Close popup when clicking outside
-            },
-        ),
+    html.script("""
+        const canvas = document.getElementById("drawingCanvas");
+        const ctx = canvas.getContext("2d");
+        const colorPicker = document.getElementById("colorPicker");
+        const clearBtn = document.getElementById("clearBtn");
+
+        let drawing = false;
+        let currentColor = "#000000";
+
+        // Set up drawing functionality
+        canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        ctx.beginPath(); // Reset the drawing path
+        draw(e);
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+        if (drawing) {
+            draw(e);
+        }
+        });
+
+        canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        });
+
+        // Function to draw on canvas
+        function draw(e) {
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = currentColor;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        }
+
+        // Change color based on the color picker
+        colorPicker.addEventListener("input", (e) => {
+        currentColor = e.target.value;
+        });
+
+        // Clear the canvas
+        clearBtn.addEventListener("click", () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath(); // Reset the path when canvas is cleared
+        });
+        """
+        )
     )
 
-
-if __name__ == '__main__':
-    run(ImagePopup)
+# Rendering the layout component
+rp.run(SignaturePad)

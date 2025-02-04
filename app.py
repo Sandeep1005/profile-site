@@ -1,4 +1,7 @@
-from reactpy import component, html, run
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from reactpy import component, html
+from reactpy.backend.fastapi import configure
 
 from components.intropage import IntroPage
 from components.stickymenu import StickyMenu
@@ -22,6 +25,10 @@ def RootComponent():
     )
 
 
-if __name__ == '__main__':
-    run(RootComponent)
-    
+app = FastAPI()
+
+# Serve static files (replace with your actual directory)
+app.mount("/static", StaticFiles(directory="static/"), name="static")
+
+# Configure ReactPy with FastAPI
+configure(app, RootComponent)
